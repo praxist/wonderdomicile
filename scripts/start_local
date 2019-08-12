@@ -1,0 +1,3 @@
+#!/bin/bash
+
+pipenv run -- bp -s --loglevel frame wonderdomicile.local.yml
