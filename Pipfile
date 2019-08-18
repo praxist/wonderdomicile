@@ -6,7 +6,7 @@ name = "pypi"
 [dev-packages]
 
 [packages]
-bibliopixel = ">=3.4.45"
+bibliopixel = {editable = true,path = "./BiblioPixel"}
 numpy = ">1"
 
 [requires]

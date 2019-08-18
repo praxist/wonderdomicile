@@ -1,2 +1,2 @@
 #!/bin/bash
-rsync -avz . root@192.168.1.19:~/workspace/wonderdomicile
+rsync -avz --exclude='.git/' . root@192.168.1.20:~/workspace/wonderdomicile
