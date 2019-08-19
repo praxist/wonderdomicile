@@ -68,6 +68,9 @@ animation:
     - typename: colorwave.Horizontal
       palette:
         colors: rainbow
+    - typename: streaker.Streaker
+      palette:
+        colors: rainbow
     #- typename: multiprocessing_test.MultiProcessingTest
     #- typename: $bpa.MatrixRain.MatrixRain
     #  run:
