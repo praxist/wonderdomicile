@@ -54,7 +54,7 @@ animation:
     - typename: colorwave.Horizontal
       palette:
         colors: rainbow
-    - typename: runner.Runner
+    - typename: streaker.Streaker
       palette:
         colors: rainbow
     #- typename: multiprocessing_test.MultiProcessingTest

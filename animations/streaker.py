@@ -12,7 +12,7 @@ Cool little running pixel pattern with a surprise at the end.
 BLACK = (0,0,0)
 
 
-class Runner(Matrix):
+class Streaker(Matrix):
     def __init__(self, *args, fade=0.99, **kwds):
 
         # Fades previously lit pixels by a percentage
