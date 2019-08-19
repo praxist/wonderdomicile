@@ -1,0 +1,8 @@
+#!/bin/bash -ex
+cd "$(dirname "$0")"
+
+scp ../controller/controller.ino.TEENSY31.hex root@odroid.local:
+ssh root@odroid.local <<EOF
+  tycmd upload --board 5957990-Teensy controller.ino.TEENSY31.hex
+  tycmd upload --board 6029700-Teensy controller.ino.TEENSY31.hex
+EOF
