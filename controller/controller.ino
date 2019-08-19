@@ -79,12 +79,13 @@ void flash(CRGB color, uint8_t ms, uint8_t times) {
 
 inline void setup_leds()
 {
-    pinMode(1, OUTPUT);
-    digitalWrite(1, HIGH);
     LEDS.addLeds<OCTOWS2811>(leds, NUM_LEDS_PER_STRIP);
     LEDS.setBrightness(255);
-    digitalWrite(1, LOW);
-    flash(CRGB(255,0,0), 500, 3); 
+    //flash(CRGB(255,0,0), 500, 3); 
+    leds[0] = CRGB(255,0,0);
+//    leds[2] = CHSV(0,255,0);
+//    leds[10] = CHSV(0,0,255);    
+    LEDS.show();
 }
 
 
@@ -110,7 +111,8 @@ inline void getData()
 
         if (cmd == CMDTYPE::PIXEL_DATA)
         {
-            Serial.readBytes(((char*)&leds), size);         
+            Serial.readBytes(((char*)&leds), size); 
+    
             uint8_t resp = RETURN_CODES::SUCCESS;
 
             LEDS.show();
@@ -118,14 +120,14 @@ inline void getData()
         }
         else if(cmd == CMDTYPE::GETID)
         {
-            flash(CRGB(0,255,0), 500, 2);
+            //flash(CRGB(0,255,0), 500, 2);
             //Serial.write(0);
             Serial.write(EEPROM.read(16));
 
         }
         else if(cmd == CMDTYPE::SETID)
         {
-            flash(CRGB(0,0,255), 500, 2);
+            //flash(CRGB(0,0,255), 500, 2);
             if(size != 1)
             {
                 Serial.write(RETURN_CODES::ERROR_SIZE);
@@ -140,7 +142,7 @@ inline void getData()
         }
         else if (cmd == CMDTYPE::SETUP_DATA)
         {
-            flash(CRGB(255,0,0), 500, 1);
+            //flash(CRGB(255,0,0), 500, 1);
             uint8_t result = RETURN_CODES::SUCCESS;
             config_t temp;
             uint8_t bytesPerPixel = 3;
@@ -169,7 +171,7 @@ inline void getData()
         }
         else if (cmd == CMDTYPE::BRIGHTNESS)
         {
-            flash(CRGB(255,255,255), 500, 3);
+            //flash(CRGB(255,255,255), 500, 3);
             uint8_t result = RETURN_CODES::SUCCESS;
             if (size != 1)
                 result = RETURN_CODES::ERROR_SIZE;
@@ -194,7 +196,7 @@ inline void getData()
         }
         else
         {
-            flash(CRGB(255,0,0), 100, 5);
+            //flash(CRGB(255,0,0), 100, 5);
             Serial.write(RETURN_CODES::ERROR_BAD_CMD);
         }
 
@@ -207,7 +209,7 @@ inline void getData()
 void loop()
 {
       getData();
-      LEDS.delay(0);
+//      LEDS.delay(0);
 //    static uint8_t hue = 0;
 //    for(int i = 0; i < NUM_STRIPS; i++) {
 //        for(int j = 0; j < NUM_LEDS_PER_STRIP; j++) {

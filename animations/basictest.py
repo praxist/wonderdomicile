@@ -9,6 +9,17 @@ class BasicTest(Matrix):
 
         super().__init__(*args, **kwds)
 
+#    def step(self, amt=1):
+#        color = self.palette(self._step)
+#
+#        for i in range(self.layout.height):
+#            for j in range(self.layout.width):
+#                if j == 9 and i < 50:
+#                    self.layout.set(i, j, color)
+#                else:
+#                    self.layout.set(i, j, (0,0,0))
+#
+#        self._step += amt
     def step(self, amt=1):
         color = self.palette(self._step)
 

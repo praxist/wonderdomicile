@@ -6,7 +6,7 @@ from bibliopixel.animation.matrix import Matrix
 class Chase(Matrix):
     def __init__(self, *args,
                  alternating=2,
-                 spacing=10,
+                 spacing=40,
                  length=2,
                  alternating_colors=True,
                  fade=0.5,
