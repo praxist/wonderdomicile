@@ -57,6 +57,26 @@ typedef struct __attribute__((__packed__))
   uint8_t spi_speed;
 } config_t;
 
+
+void flash(CRGB color, uint8_t ms, uint8_t times) {
+    for(int t = 0; t < times; t++) {
+        for(int i = 0; i < NUM_STRIPS; i++) {
+            for(int j = 0; j < NUM_LEDS_PER_STRIP; j++) {
+                leds[(i*NUM_LEDS_PER_STRIP) + j] = color;
+            }
+        }
+        LEDS.show();
+        delay(ms);
+        for(int i = 0; i < NUM_STRIPS; i++) {
+            for(int j = 0; j < NUM_LEDS_PER_STRIP; j++) {
+                leds[(i*NUM_LEDS_PER_STRIP) + j] = CHSV(0,0,0);
+            }
+        }
+        LEDS.show(); 
+        delay(ms); 
+    }
+}
+
 inline void setup_leds()
 {
     pinMode(1, OUTPUT);
@@ -64,22 +84,9 @@ inline void setup_leds()
     LEDS.addLeds<OCTOWS2811>(leds, NUM_LEDS_PER_STRIP);
     LEDS.setBrightness(255);
     digitalWrite(1, LOW);
-    //leds.begin();
-    for(int i = 0; i < NUM_STRIPS; i++) {
-        for(int j = 0; j < NUM_LEDS_PER_STRIP; j++) {
-            leds[(i*NUM_LEDS_PER_STRIP) + j] = CRGB(255,0,0);
-        }
-    }
-    LEDS.show();
-    delay(1000);
-    for(int i = 0; i < NUM_STRIPS; i++) {
-        for(int j = 0; j < NUM_LEDS_PER_STRIP; j++) {
-            leds[(i*NUM_LEDS_PER_STRIP) + j] = CHSV(0,0,0);
-        }
-    }
-    LEDS.show();
-  
+    flash(CRGB(255,0,0), 500, 3); 
 }
+
 
 void setup()
 {   
@@ -111,12 +118,14 @@ inline void getData()
         }
         else if(cmd == CMDTYPE::GETID)
         {
-            Serial.write(0);
-          //Serial.write(EEPROM.read(16));
+            flash(CRGB(0,255,0), 500, 2);
+            //Serial.write(0);
+            Serial.write(EEPROM.read(16));
 
         }
         else if(cmd == CMDTYPE::SETID)
         {
+            flash(CRGB(0,0,255), 500, 2);
             if(size != 1)
             {
                 Serial.write(RETURN_CODES::ERROR_SIZE);
@@ -124,16 +133,17 @@ inline void getData()
             else
             {
                 uint8_t id = Serial.read();
-                //#ifdef USE_EEPROM
-                //    EEPROM.write(16, id);
-                //#endif
+                EEPROM.write(16, id);
+
                 Serial.write(RETURN_CODES::SUCCESS);
             }
         }
         else if (cmd == CMDTYPE::SETUP_DATA)
         {
+            flash(CRGB(255,0,0), 500, 1);
             uint8_t result = RETURN_CODES::SUCCESS;
             config_t temp;
+            uint8_t bytesPerPixel = 3;
 
             if (size != sizeof(config_t))
             {
@@ -149,8 +159,9 @@ inline void getData()
                 else
                 {
                     // dont care about matching sizes
-                    //if(temp.pixel_count / bytesPerPixel != NUM_LEDS_PER_STRIP)
-                    //    result = RETURN_CODES::ERROR_PIXEL_COUNT;
+                    if(temp.pixel_count / bytesPerPixel != NUM_LEDS_PER_STRIP * NUM_STRIPS)
+                        result = RETURN_CODES::ERROR_PIXEL_COUNT;
+                    //result = RETURN_CODES::SUCCESS;
                 }
             }
 
@@ -158,6 +169,7 @@ inline void getData()
         }
         else if (cmd == CMDTYPE::BRIGHTNESS)
         {
+            flash(CRGB(255,255,255), 500, 3);
             uint8_t result = RETURN_CODES::SUCCESS;
             if (size != 1)
                 result = RETURN_CODES::ERROR_SIZE;
@@ -182,6 +194,7 @@ inline void getData()
         }
         else
         {
+            flash(CRGB(255,0,0), 100, 5);
             Serial.write(RETURN_CODES::ERROR_BAD_CMD);
         }
 
