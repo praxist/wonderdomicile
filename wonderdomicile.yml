@@ -27,18 +27,18 @@ path: ./animations/
 
 animation:
   typename: sequence
-  length: 600
+  length: 10
   run:
     fps: 20
     threaded: true
   animations:
-    - typename: chase.Chase
-      name: Chase
+    - typename: spiral.Spiral
+      name: Spiral
       run:
         fps: 20
-      palette:
-        colors: rainbow
-    - typename: colorwave.Horizontal
+      spacing: 512
+      length: 4
+      fade: 0.25
       palette:
         colors: rainbow
     - typename: triangles.Triangles
@@ -48,19 +48,26 @@ animation:
       palette:
         colors: rainbow
       spacing: 0
-      group_spacing: 10
+      group_spacing: 20
       blink: true
-      fade: 0.9
+      fade: 1
+      size: 5
     - typename: triangles.Triangles
       name: ScrollingTriangles
       run:
         fps: 20
+      group_spacing: 0
+      spacing: 30
       palette:
         colors: rainbow
-    - typename: spiral.Spiral
-      name: Spiral
+    - typename: chase.Chase
+      name: Chase
       run:
         fps: 20
+      spacing: 30
+      palette:
+        colors: rainbow
+    - typename: colorwave.Horizontal
       palette:
         colors: rainbow
     #- typename: multiprocessing_test.MultiProcessingTest
