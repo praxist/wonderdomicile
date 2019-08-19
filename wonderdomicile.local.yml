@@ -14,7 +14,7 @@ path: ./animations/
 
 animation:
   typename: sequence
-  length: 10
+  length: 20
   run:
     fps: 30
     threaded: true
@@ -23,12 +23,13 @@ animation:
     #  name: Fire2012
     #  run:
     #    fps: 20
-    - typename: basictest.BasicTest
-      name: Basic Test
-      run:
-        fps: 600
+    - typename: colorwave.Vertical
       palette:
         colors: rainbow
+      bloom: true
+      color_speed: 4
+      color_distance: 3
+    - typename: basictest.BasicTest
     - typename: chase.Chase
       name: Chase
       run:
@@ -63,9 +64,6 @@ animation:
       name: Spiral
       run:
         fps: 20
-      palette:
-        colors: rainbow
-    - typename: colorwave.Horizontal
       palette:
         colors: rainbow
     - typename: streaker.Streaker

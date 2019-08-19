@@ -27,11 +27,17 @@ path: ./animations/
 
 animation:
   typename: sequence
-  length: 10
+  length: 60
   run:
     fps: 20
     threaded: true
   animations:
+    - typename: colorwave.Vertical
+      palette:
+        colors: rainbow
+      bloom: true
+      color_speed: 4
+      color_distance: 3
     - typename: spiral.Spiral
       name: Spiral
       run:
