@@ -4,6 +4,8 @@ Description=Wonderdomicile Light Control
 [Service]
 Type=simple
 ExecStart=/bin/bash /usr/local/bin/wonderdomicile
+Nice=-20
+Restart=always
 
 [Install]
 WantedBy=multi-user.target
