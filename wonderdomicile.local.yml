@@ -19,6 +19,10 @@ animation:
     fps: 30
     threaded: true
   animations:
+    - typename: sparkles.Sparkles
+      name: Sparkles
+      palette:
+        colors: rainbow
     - typename: triangles.Triangles
       name: ScrollingTriangles
       run:
