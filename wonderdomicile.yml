@@ -33,6 +33,13 @@ animation:
     fps: 25
     threaded: true
   animations:
+    - typename: fire.Fire
+      name: Fire
+      run:
+        fps: 60
+      palette:
+        colors: rainbow
+
     - typename: sparkles.Sparkles
       name: Sparkles
       palette:
