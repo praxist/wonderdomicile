@@ -48,3 +48,21 @@ class Streaker(Matrix):
             self.layout.fill(color)
         log.error((height, width, color))
         self.layout.set(height, width, color)
+
+
+class MicroSeizure(Matrix):
+    def __init__(self, *args, wait=100, **kwargs):
+        self.wait = wait
+        super().__init__(*args, **kwds)
+
+    def step(self, amt=1):
+        self._step += amt
+
+        if self._step % self.wait == 0:
+            self.layout.fill((255, 255, 0))
+        elif self._step % self.wait == 1:
+            self.layout.fill((0, 255, 255))
+        elif self._step % self.wait == 2:
+            self.layout.fill((255, 0, 255))
+        elif self._step % self.wait == 3:
+            self.layout.fill((0, 0, 0))
