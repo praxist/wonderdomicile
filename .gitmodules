@@ -1,6 +1,6 @@
 [submodule "BiblioPixel"]
 	path = BiblioPixel
-	url = https://github.com/ManiacalLabs/BiblioPixel.git
+	url = https://github.com/praxist/BiblioPixel.git
 [submodule "BiblioPixel.wiki"]
 	path = BiblioPixel.wiki
 	url = https://github.com/ManiacalLabs/BiblioPixel.wiki.git
