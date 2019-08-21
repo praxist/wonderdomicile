@@ -81,10 +81,10 @@ inline void setup_leds()
 {
     LEDS.addLeds<OCTOWS2811>(leds, NUM_LEDS_PER_STRIP);
     LEDS.setBrightness(255);
-    //flash(CRGB(255,0,0), 500, 3); 
-    leds[0] = CRGB(255,0,0);
-//    leds[2] = CHSV(0,255,0);
-//    leds[10] = CHSV(0,0,255);    
+    flash(CRGB(255,0,0), 500, 3); 
+//    leds[0] = CRGB(255,0,0);
+//    leds[2] = CRGB(0,255,0);
+//    leds[4] = CRGB(0,0,255);    
     LEDS.show();
 }
 
