@@ -10,7 +10,7 @@ class Chase(Matrix):
                  length=2,
                  alternating_colors=True,
                  fade=0.5,
-                 direction=1,
+                 direction=-1,
                  **kwds):
 
         # Specified columns to chase in reverse.
@@ -26,7 +26,7 @@ class Chase(Matrix):
         # Length of the chase
         self.length = length
 
-        # Chase goes up or down (-1, 1)
+        # Chase goes up or down (up, down)
         self.direction = direction
 
         # Fades previously lit pixels by a percentage

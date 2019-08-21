@@ -32,6 +32,22 @@ animation:
     fps: 20
     threaded: true
   animations:
+    - typename: chase.Chase
+      name: Chase
+      run:
+        fps: 20
+      spacing: 30
+      alternating: 0
+      palette:
+        colors: rainbow
+    - typename: chase.Chase
+      name: Chase
+      run:
+        fps: 20
+      spacing: 30
+      alternating: 2
+      palette:
+        colors: rainbow
     - typename: colorwave.Vertical
       palette:
         colors: rainbow
@@ -63,13 +79,6 @@ animation:
       run:
         fps: 20
       group_spacing: 0
-      spacing: 30
-      palette:
-        colors: rainbow
-    - typename: chase.Chase
-      name: Chase
-      run:
-        fps: 20
       spacing: 30
       palette:
         colors: rainbow

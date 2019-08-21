@@ -1,0 +1,9 @@
+[Unit]
+Description=Wonderdomicile Light Control
+
+[Service]
+Type=simple
+ExecStart=/bin/bash /usr/local/bin/wonderdomicile
+
+[Install]
+WantedBy=multi-user.target
