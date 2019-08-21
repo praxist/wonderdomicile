@@ -3,7 +3,7 @@ Description=Wonderdomicile Light Control
 
 [Service]
 Type=simple
-ExecStart=/bin/bash /usr/local/bin/wonderdomicile
+ExecStart=/bin/bash /usr/local/bin/wonderdomicile 0
 Nice=-20
 Restart=always
 

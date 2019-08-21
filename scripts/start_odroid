@@ -1,3 +1,4 @@
 #!/bin/bash
 
-pipenv run -- bp --loglevel frame wonderdomicile.yml
+pipenv run -- bp wonderdomicile.yml
+#pipenv run -- bp --loglevel frame wonderdomicile.yml

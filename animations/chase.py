@@ -69,3 +69,50 @@ class Chase(Matrix):
                 i, j,
                 [math.floor(x * self.fade) for x in old]
             )
+
+class ChaseUp(Matrix):
+    def __init__(self, *args,
+                 spacing=40,
+                 length=2,
+                 fade=0.5,
+                 direction=-1,
+                 **kwds):
+
+        # Length of empty space between each chase
+        self.spacing = spacing
+
+        # Length of the chase
+        self.length = length
+
+        # Chase goes up or down (up, down)
+        self.direction = direction
+
+        # Fades previously lit pixels by a percentage
+        self.fade = fade
+
+        super().__init__(*args, **kwds)
+
+    def step(self, amt=1):
+        for i in range(self.layout.width):
+            color = self.palette(self._step + 50 * math.floor(i/4))
+            for j in range(self.layout.height):
+                pos = j * self.direction - self._step
+
+                if pos % (self.spacing + self.length) in range(self.length):
+                    self.layout.set(i, j, color)
+                else:
+                    if self.fade < 1:
+                        self.fade_pixel(i, j)
+                    else:
+                        self.layout.set(i, j, (0,0,0))
+
+        self._step += amt
+
+    # fades pixel at [i,j] by self.fade
+    def fade_pixel(self, i, j):
+        old = self.layout.get(i, j)
+        if old != (0,0,0):
+            self.layout.set(
+                i, j,
+                [math.floor(x * self.fade) for x in old]
+            )

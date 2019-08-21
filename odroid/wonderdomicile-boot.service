@@ -1,0 +1,11 @@
+[Unit]
+Description=Wonderdomicile Light Control for Boot
+
+[Service]
+Type=simple
+ExecStart=/bin/bash /usr/local/bin/wonderdomicile 20
+Nice=-20
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
