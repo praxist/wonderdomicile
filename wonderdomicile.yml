@@ -28,38 +28,11 @@ path: ./animations/
 animation:
   typename: sequence
   length: 600
-  #random: true
+  random: true
   run:
     fps: 25
     threaded: true
   animations:
-    - typename: fire.Fire
-      name: Fire
-      run:
-        fps: 60
-      palette:
-        colors: rainbow
-
-    - typename: sparkles.Sparkles
-      name: Sparkles
-      palette:
-        colors: rainbow
-    - typename: triangles.Triangles
-      name: ScrollingTriangles
-      run:
-        fps: 20
-      group_spacing: 0
-      size: 5
-      spacing: 30
-      palette:
-        colors: rainbow
-    - typename: chase.ChaseUp
-      name: ChaseUp
-      run:
-        fps: 20
-      spacing: 30
-      palette:
-        colors: rainbow
     - typename: $bpa.MatrixRain.MatrixRain
       run:
         fps: 30
@@ -68,13 +41,24 @@ animation:
       palette:
         colors:
           - royal blue 1
+    - typename: chase.ChaseUp
+      name: ChaseUp
+      run:
+        fps: 20
+      spacing: 30
+      palette:
+        colors: rainbow
     - typename: hydropump.HydroPump
       palette:
         colors: rainbow
       fade: 0.5
-      pump_speed: 12
+      pump_speed: 8
       pipe_rate: 2
       gravity: 0.5
+    - typename: sparkles.Sparkles
+      name: Sparkles
+      palette:
+        colors: rainbow
     - typename: chase.Chase
       name: Chase
       run:
@@ -91,31 +75,12 @@ animation:
       color_distance: 3
       palette:
         colors: rainbow
-        #- typename: triangles.Triangles
-        #  name: BlinkyTriangles
-        #  run:
-        #    fps: 20
-        #  palette:
-        #    colors: rainbow
-        #  spacing: 0
-        #  group_spacing: 20
-        #  blink: true
-        #  fade: 1
-        #  size: 5
-    - typename: colorwave.Horizontal
+    - typename: fire.Fire
+      name: Fire
+      run:
+        fps: 60
       palette:
         colors: rainbow
-    #- typename: multiprocessing_test.MultiProcessingTest
-    #- typename: $bpa.MatrixRain.MatrixRain
-    #  run:
-    #    fps: 10
-    #- typename: $bpa.bloom.Bloom
-    #  run:
-    #    fps: 15
-    #- typename: $bpa.Twinkle.Twinkle
-    #  run:
-    #    fps: 10
-    #- typename: $bpa.pinwheel.Pinwheel
 layout:
   typename: matrix
   # DO NOT CHANGE THESE

@@ -14,37 +14,11 @@ path: ./animations/
 
 animation:
   typename: sequence
-  length: 20
+  length: 10
   run:
-    fps: 30
+    fps: 25
     threaded: true
   animations:
-    - typename: fire.Fire
-      name: Fire
-      run:
-        fps: 60
-      palette:
-        colors: rainbow
-
-    - typename: sparkles.Sparkles
-      name: Sparkles
-      palette:
-        colors: rainbow
-    - typename: triangles.Triangles
-      name: ScrollingTriangles
-      run:
-        fps: 20
-      group_spacing: 0
-      spacing: 30
-      palette:
-        colors: rainbow
-    - typename: chase.ChaseUp
-      name: ChaseUp
-      run:
-        fps: 20
-      spacing: 30
-      palette:
-        colors: rainbow
     - typename: $bpa.MatrixRain.MatrixRain
       run:
         fps: 30
@@ -53,13 +27,24 @@ animation:
       palette:
         colors:
           - royal blue 1
+    - typename: chase.ChaseUp
+      name: ChaseUp
+      run:
+        fps: 20
+      spacing: 30
+      palette:
+        colors: rainbow
     - typename: hydropump.HydroPump
       palette:
         colors: rainbow
       fade: 0.5
-      pump_speed: 12
+      pump_speed: 8
       pipe_rate: 2
       gravity: 0.5
+    - typename: sparkles.Sparkles
+      name: Sparkles
+      palette:
+        colors: rainbow
     - typename: chase.Chase
       name: Chase
       run:
@@ -74,19 +59,14 @@ animation:
       bloom: true
       color_speed: 4
       color_distance: 3
-    - typename: spiral.Spiral
-      name: Spiral
-      run:
-        fps: 20
-      spacing: 512
-      length: 4
-      fade: 0.25
       palette:
         colors: rainbow
-    #- typename: fire2012.Fire2012
-    #  name: Fire2012
-    #  run:
-    #    fps: 20
+    - typename: fire.Fire
+      name: Fire
+      run:
+        fps: 60
+      palette:
+        colors: rainbow
 layout:
   typename: matrix
   width: 16
