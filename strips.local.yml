@@ -10,8 +10,8 @@ aliases:
 path: ./animations/
 
 animation:
-  typename: strips.Mega
-  name: Mega
+  typename: strips.Combo
+  name: Combo
   run:
     fps: 60
   palette:

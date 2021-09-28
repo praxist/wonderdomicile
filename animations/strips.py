@@ -1,12 +1,15 @@
+from functools import reduce
 import math
 import random
 import redis
 import time
 
 from bibliopixel.animation.matrix import Matrix
+import bibliopixel as bp
 
 
-class Bumper:
+class Clock:
+    """BPM clock to sync animations to music."""
     def __init__(self, bpm, multiple):
         self.set_bpm_attrs(bpm, multiple)
         self._reltime = self._last_zero_time = int(time.time() * 1000)
@@ -57,7 +60,7 @@ class Bumper:
             _reltime: the current time in ms mod _usbpm, used to calculate
                       _frac
             _last_reltime: _reltime as of the last update
-            _last_zero_time: _ the (interpolated) timestamp of the last
+            _last_zero_time: the (interpolated) timestamp of the last
                              beat-multiple, we use it to calculate _reltime.
                              Note that we can't just use `now % _usbpm` because
                              we want to move smoothly between nearby bpms.
@@ -70,7 +73,12 @@ class Bumper:
         self._frac = self._reltime / self._usbpm
 
 
+# Component animations to use with Combo
+########################################
+
+
 class Looperball:
+    """Fireball that loops"""
     def __init__(self, length, clock, hue=0):
         self._length = length
         self._clock = clock
@@ -156,155 +164,6 @@ class Looperball:
                 self._hsvs[k[0]][k[1]] = self._embers[k]
         return self._hsvs
 
-    # some bug, all pixels stay lit w/ 1 fireball...
-    # @classmethod
-    # def combine_hsvs(cls, balls):
-    #     # for i, ball in enumerate(balls):
-    #     #     print(i, len(ball._hsvs), len(ball._hsvs[0]))
-    #     sums = [[[0, 0, 0] for j in range(len(balls[0]._hsvs[0]))]
-    #             for i in range(len(balls[0]._hsvs))]
-    #     for strip in range(len(balls[0]._hsvs)):
-    #         for w in range(len(balls[0]._hsvs[strip])):
-    #             # print("strip, w:", strip, w)
-    #             # for i, ball in enumerate(balls):
-    #                 # print("ball i:", i)
-    #                 # print("hue sum:", ball._hsvs[strip][w][0])
-    #                 # print("sat maz1:", ball._hsvs[strip][w][1])
-    #                 # print("val maz2:", ball._hsvs[strip][w][2])
-
-    #             sums[strip][w] = (
-    #                 sum(ball._hsvs[strip][w][0] for ball in balls) % 255,
-    #                 max(255, sum(ball._hsvs[strip][w][1] for ball in balls)),
-    #                 max(255, sum(ball._hsvs[strip][w][2] for ball in balls))
-    #             )
-    #     return sums
-
-
-def ccombine_hsvs(hsvs):
-    num_strips = len(hsvs[0])
-    num_leds = len(hsvs[0][0])
-    res = [[[0, 0, 0] for ll in range(num_leds)]
-           for ss in range(num_strips)]
-    for strip in range(num_strips):
-        for led in range(num_leds):
-            h, s, v = 0, 0, 0
-            for hsv in hsvs:
-                h += hsv[strip][led][0]
-                s += hsv[strip][led][1]
-                v += hsv[strip][led][2]
-            h = h % 256
-            s = min(255, s)
-            v = min(255, v)
-            res[strip][led] = [h, s, v]
-    return res
-
-
-from functools import reduce
-import bibliopixel as bp
-bp.colors.conversions.hsv2rgb
-
-
-# something is going wrong here, pixels are not going to zero!
-def many_hsvs_to_rgb(hsvs):
-    num_strips = len(hsvs[0])
-    num_leds = len(hsvs[0][0])
-    res = [[[0, 0, 0] for ll in range(num_leds)]
-           for ss in range(num_strips)]
-    for strip in range(num_strips):
-        for led in range(num_leds):
-            # for some reason the conversion screws this up?
-            #
-            # import bibliopixel as bp
-            # c1 = bp.colors.conversions.hsv2rgb((0, 0, 0))
-            # c2 = bp.colors.conversions.hsv2rgb((0, 0, 0))
-            # c3 = bp.colors.conversions.hsv2rgb((0, 0, 0))
-            # bp.colors.arithmetic.color_blend(
-            #     bp.colors.arithmetic.color_blend(c1, c2),
-            #     c3)
-            #
-            # = (2, 2, 2)
-            if all(hsv[strip][led][2] == 0 for hsv in hsvs):
-                rgb = (0, 0, 0)
-            else:
-                rgbs = [bp.colors.conversions.hsv2rgb(hsv[strip][led]) for hsv in hsvs]
-                rgb = reduce(bp.colors.arithmetic.color_blend, rgbs)
-            res[strip][led] = rgb
-    return res
-
-
-class Mega(Matrix):
-    def __init__(self, *args,
-                 bpm=30,
-                 multiple=1,
-                 **kwds):
-        super().__init__(*args, **kwds)
-        self.clock = Bumper(bpm, multiple)
-        self.clock2 = Bumper(int(3 / 2 * bpm), 2)
-        # self.clock3 = Bumper(4 * bpm, 1)
-        self.fireballs = [
-            Looperball(5, self.clock, hue=40), 
-            # Looperball(5, self.clock2, hue=100),
-            Flash(self.clock2),
-            # Looperball(30, self.clock, hue=200),
-        ]
-
-    def step(self, amt=1):
-        self.clock.update()
-        self.clock2.update()
-        # self.clock3.update()
-
-        hsv_sets = [ball.step() for ball in self.fireballs]
-        hsv_sets = [x for x in hsv_sets if x is not None]
-        # for ball in self.fireballs:
-        #     ball.step()
-        # hsvs = Looperball.combine_hsvs(self.fireballs)
-
-        # rgbs = many_hsvs_to_rgb([fb._hsvs for fb in self.fireballs])
-        rgbs = many_hsvs_to_rgb(hsv_sets)
-        # hsvs = self.fireballs[0]._hsvs
-
-        # for h, strip in enumerate(self.fireballs[0]._hsvs):
-        for h, strip in enumerate(rgbs):
-            for w in range(len(strip)):
-                rgb = strip[w]
-                self.layout.set(w, h, rgb)
-
-
-class Fill(Matrix):
-    """Basic redis-controlled HSV fill."""
-    def __init__(self, *args,
-                 hue=128,
-                 sat=128,
-                 val=128,
-                 **kwds):
-        super().__init__(*args, **kwds)
-        self._last_fetch = 0
-        self.hue = hue
-        self.sat = sat
-        self.val = val
-        self.rc = redis.Redis()
-
-    def fetch(self):
-        """Poll redis for new arg values."""
-        got = self.rc.mget("ts", "hue", "sat", "val")
-        ts = int(got['ts'])
-        if ts > self._last_fetch:
-            if got['hue']:
-                self.hue = got['hue']
-            if got['sat']:
-                self.sat = got['sat']
-            if got['val']:
-                self.val = got['val']
-            self._last_fetch = ts
-
-    def step(self, amt=1):
-        self.fetch()
-        self.layout.fillHSV((self.hue, self.sat, self.val))
-
-
-class RedisGetter:
-    pass
-
 
 class Flash:
     """Quick flash every beat"""
@@ -332,14 +191,13 @@ class Flash:
         fpc = self.fpc
         colors = self.colors
 
-        if self._blink // fpc >= len(colors):
+        ci = self._blink // fpc
+        if ci >= len(colors):
             self._blink = None
             return None
         hsv = colors[self._blink // fpc]
         self._blink += 1
         return [[hsv for i in range(200)] for j in range(2)]
-        # print(self._blink)
-
 
 
 class BumpMix:
@@ -377,6 +235,76 @@ class BumpMix:
                 for j in range(2)]
 
 
+def many_hsvs_to_rgb(hsvs):
+    """Combine list of hsvs otf [[(h, s, v), ...], ...] and return RGB list."""
+    num_strips = len(hsvs[0])
+    num_leds = len(hsvs[0][0])
+    res = [[[0, 0, 0] for ll in range(num_leds)] for ss in range(num_strips)]
+    for strip in range(num_strips):
+        for led in range(num_leds):
+            # for some reason the conversion screws this up?
+            #
+            # import bibliopixel as bp
+            # c1 = bp.colors.conversions.hsv2rgb((0, 0, 0))
+            # c2 = bp.colors.conversions.hsv2rgb((0, 0, 0))
+            # c3 = bp.colors.conversions.hsv2rgb((0, 0, 0))
+            # bp.colors.arithmetic.color_blend(
+            #     bp.colors.arithmetic.color_blend(c1, c2),
+            #     c3)
+            #
+            # = (2, 2, 2)
+            if all(hsv[strip][led][2] == 0 for hsv in hsvs):
+                rgb = (0, 0, 0)
+            else:
+                rgbs = [bp.colors.conversions.hsv2rgb(hsv[strip][led])
+                        for hsv in hsvs]
+                rgb = reduce(bp.colors.arithmetic.color_blend, rgbs)
+            res[strip][led] = rgb
+    return res
+
+
+class Combo(Matrix):
+    """Combine other animations."""
+    def __init__(self, *args,
+                 bpm=30,
+                 multiple=1,
+                 **kwds):
+        super().__init__(*args, **kwds)
+        self.clock = Clock(bpm, multiple)
+        self.clock2 = Clock(int(3 / 2 * bpm), 2)
+        # self.clock3 = Clock(4 * bpm, 1)
+        self.fireballs = [
+            Looperball(5, self.clock, hue=40), 
+            # Looperball(5, self.clock2, hue=100),
+            Flash(self.clock2),
+            # Looperball(30, self.clock, hue=200),
+        ]
+
+    def step(self, amt=1):
+        self.clock.update()
+        self.clock2.update()
+        # self.clock3.update()
+
+        hsv_sets = [ball.step() for ball in self.fireballs]
+        hsv_sets = [x for x in hsv_sets if x is not None]
+        # for ball in self.fireballs:
+        #     ball.step()
+        # hsvs = Looperball.combine_hsvs(self.fireballs)
+
+        # rgbs = many_hsvs_to_rgb([fb._hsvs for fb in self.fireballs])
+        rgbs = many_hsvs_to_rgb(hsv_sets)
+        # hsvs = self.fireballs[0]._hsvs
+
+        # for h, strip in enumerate(self.fireballs[0]._hsvs):
+        for h, strip in enumerate(rgbs):
+            for w in range(len(strip)):
+                rgb = strip[w]
+                self.layout.set(w, h, rgb)
+
+# Stand-alone animations
+########################
+
+
 class Bump(Matrix):
     """Bump to the music"""
     def __init__(self, *args,
@@ -386,7 +314,7 @@ class Bump(Matrix):
                  **kwds):
         super().__init__(*args, **kwds)
         self.hue = hue
-        self.clock = Bumper(bpm, multiple)
+        self.clock = Clock(bpm, multiple)
         self.rc = redis.Redis()
         self._last_fetch = 0
         self.fetch()
@@ -432,10 +360,12 @@ class Bump(Matrix):
 
 
 def blend(a, b, perc=.5):
+    """Blend two RGBs, use `perc` % of `a`."""
     return [int(a[i] * perc + b[i] * (1 - perc)) for i in range(len(a))]
 
 
 class Embers(Matrix):
+    """Comet with a trail of glowing embers."""
     def __init__(self, *args,
                  fade=0.9,
                  sparkle_prob=0.00125,
@@ -488,51 +418,33 @@ class Embers(Matrix):
         self._step += amt
 
 
-class ChaseChris(Matrix):
+class Fill(Matrix):
+    """Basic redis-controlled HSV fill."""
     def __init__(self, *args,
-                 spacing=40,
-                 lllength=2,
-                 fade=0.5,
-                 dirrrection=-1,
+                 hue=128,
+                 sat=128,
+                 val=128,
                  **kwds):
-
-        # Length of empty space between each chase
-        self.spacing = spacing
-
-        # Length of the chase
-        self.length = lllength
-
-        # Chase goes up or down (up, down)
-        self.direction = dirrrection
-
-        # Fades previously lit pixels by a percentage
-        self.fade = fade
-
         super().__init__(*args, **kwds)
+        self._last_fetch = 0
+        self.hue = hue
+        self.sat = sat
+        self.val = val
+        self.rc = redis.Redis()
+
+    def fetch(self):
+        """Poll redis for new arg values."""
+        got = self.rc.mget("ts", "hue", "sat", "val")
+        ts = int(got['ts'])
+        if ts > self._last_fetch:
+            if got['hue']:
+                self.hue = got['hue']
+            if got['sat']:
+                self.sat = got['sat']
+            if got['val']:
+                self.val = got['val']
+            self._last_fetch = ts
 
     def step(self, amt=1):
-        for j in range(self.layout.width):
-            color = self.palette((j + .2 * self._step) % 255)
-            pos = j * self.direction - self._step
-
-            if pos % (self.spacing + self.height) in range(self.height):
-                self.layout.set(j, 0, color)
-                self.layout.set(j, 1, color)
-            else:
-                if self.fade < 1:
-                    self.fade_pixel(j, 0)
-                    self.fade_pixel(j, 1)
-                else:
-                    self.layout.set(j, 0, (0,0,0))
-                    self.layout.set(j, 1, (0,0,0))
-
-        self._step += amt
-
-    # fades pixel at [i,j] by self.fade
-    def fade_pixel(self, i, j):
-        old = self.layout.get(i, j)
-        if old != (0,0,0):
-            self.layout.set(
-                i, j,
-                [math.floor(x * self.fade) for x in old]
-            )
+        self.fetch()
+        self.layout.fillHSV((self.hue, self.sat, self.val))
