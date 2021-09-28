@@ -6,8 +6,8 @@ from bibliopixel.animation.matrix import Matrix
 
 class Sparkles(Matrix):
     def __init__(self, *args,
-                 fade=0.8,
-                 sparkle_prob=0.0005,
+                 fade=0.9,
+                 sparkle_prob=0.00125,
                  **kwds):
 
         self.fade = fade
@@ -29,8 +29,8 @@ class Sparkles(Matrix):
         for i in range(self.layout.width):
             # color = self.palette(self._step + 50 * math.floor(i / 2))
             for j in range(self.layout.height):
-                # color = self.palette(random.randint(0, 255))
-                color = (255,255,255)
+                color = self.palette(random.randint(0, 255))
+                # color = (255,255,255)
                 self.fade_pixel(i, j)
 
                 if random.random() < self.sparkle_prob:
