@@ -2,7 +2,7 @@
 
 driver:
   typename: simpixel
-  num: 400
+  num: 2288
 
 # enables numpy. currently v slow
 #numbers: float
@@ -12,38 +12,63 @@ aliases:
 
 path: ./animations/
 
-
 animation:
-
-  # typename: chase.ChaseChris
-  # name: Wat
-  # run:
-  #   fps: 60
-  # palette:
-  #   colors: rainbow
-  # spacing: 100
-  # lllength: 10
-  # fade: .9
-  # dirrrection: 1
-
-  typename: strips.Mega
-  name: Wat
+  typename: sequence
+  length: 10
   run:
-    fps: 60
-  palette:
-    colors: rainbow
-
-  # typename: strips.Bump
-  # name: Wat
-  # run:
-  #   fps: 100
-  # palette:
-  #   colors: rainbow
-  # bpm: 80
-  # multiple: 1
-
+    fps: 25
+    threaded: true
+  animations:
+    - typename: $bpa.MatrixRain.MatrixRain
+      run:
+        fps: 30
+      tail: 1
+      growthRate: 1
+      palette:
+        colors:
+          - royal blue 1
+    - typename: chase.ChaseUp
+      name: ChaseUp
+      run:
+        fps: 20
+      spacing: 30
+      palette:
+        colors: rainbow
+    - typename: hydropump.HydroPump
+      palette:
+        colors: rainbow
+      fade: 0.5
+      pump_speed: 8
+      pipe_rate: 2
+      gravity: 0.5
+    - typename: sparkles.Sparkles
+      name: Sparkles
+      palette:
+        colors: rainbow
+    - typename: chase.Chase
+      name: Chase
+      run:
+        fps: 20
+      spacing: 30
+      alternating: 2
+      palette:
+        colors: rainbow
+    - typename: colorwave.Vertical
+      palette:
+        colors: rainbow
+      bloom: true
+      color_speed: 4
+      color_distance: 3
+      palette:
+        colors: rainbow
+    - typename: fire.Fire
+      name: Fire
+      run:
+        fps: 60
+      palette:
+        colors: rainbow
 layout:
   typename: matrix
-  width: 200
-  height: 2
+  width: 16
+  height: 143
   brightness: 255

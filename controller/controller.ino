@@ -6,8 +6,13 @@
 /***************************
 User defines
 ***************************/
-#define NUM_LEDS_PER_STRIP 200
-#define NUM_STRIPS 2
+/* wonderdomicile config */
+#define NUM_LEDS_PER_STRIP 143
+#define NUM_STRIPS 8
+
+/* strips config */
+/* #define NUM_LEDS_PER_STRIP 200 */
+/* #define NUM_STRIPS 2 */
 
 #define MAX_BRIGHTNESS 255
 #define GLOBAL_BRIGHTNESS 255
@@ -63,8 +68,6 @@ void flash(CRGB color, uint8_t ms, uint8_t times) {
         for(int i = 0; i < NUM_STRIPS; i++) {
             for(int j = 0; j < NUM_LEDS_PER_STRIP; j++) {
                 leds[(i*NUM_LEDS_PER_STRIP) + j] = color;
-                LEDS.show();
-                delay(100);
             }
         }
         LEDS.show();
