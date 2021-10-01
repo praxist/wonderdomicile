@@ -1,0 +1,30 @@
+# Actual config for physical project
+
+drivers:
+  - c_order: GRB
+    num: 400
+    #gamma: [1.1, 0.5, 0]
+    ledtype: WS2811
+    typename: .serial
+    dev: /dev/replaceme
+
+aliases:
+  bpa: BiblioPixelAnimations.matrix
+
+path: ./animations/
+
+animation:
+
+  typename: strips.Mega
+  name: Mega
+  run:
+    fps: 60
+  palette:
+    colors: rainbow
+
+layout:
+  typename: matrix
+  serpentine: false
+  width: 200
+  height: 2
+  brightness: 255
